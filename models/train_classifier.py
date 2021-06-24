@@ -1,24 +1,81 @@
 import sys
+import re
+import sqlite3
+import pandas as pd
+import numpy as np
 
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from sqlalchemy import create_engine
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+
+from sklearn.externals import joblib
 
 def load_data(database_filepath):
-    pass
+    engine = create_engine('sqlite:///{}'.format(database_filepath))
+    df = pd.read_sql('SELECT * FROM DisasterMessages', con = engine)
+    
+    labels = [item for item in list(df.columns) if item not in ['id', 'message', 'original', 'genre']]
+    X = df['message']
+    y = df[labels].values
+    return X, y, labels
 
 
 def tokenize(text):
-    pass
+    url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+    
+    detected_urls = re.findall(url_regex, text)
+    for url in detected_urls:
+        text = text.replace(url, "urlplaceholder")
+
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
+    
+    clean_tokens = []
+    for tok in tokens:
+        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+        clean_tokens.append(clean_tok)
+
+    return clean_tokens
 
 
 def build_model():
-    pass
+    pipeline = Pipeline([
+           ('vect', CountVectorizer(tokenizer=tokenize)),
+           ('tfidf', TfidfTransformer()),
+           ('clf', MultiOutputClassifier(RandomForestClassifier()))
+        ])
+
+    parameters = {
+        'vect__ngram_range': ((1, 1), (1, 2)),
+        'vect__max_df': (0.5, 0.75, 1.0),
+        'vect__max_features': (None, 5000, 10000),
+        # 'tfidf__use_idf': (True, False),
+        # 'clf__estimator__n_estimators': [5, 10, 50, 100, 200],
+        # 'clf__estimator__min_samples_split': [2, 3, 4],
+    }
+
+    return GridSearchCV(pipeline, param_grid=parameters)
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    y_pred = model.predict(X_test)
+    print('Best params')
+    print(model.best_params_)
+    
+    for index in range(len(category_names)):
+        class_report = classification_report(Y_test[:, index], y_pred[:, index], target_names=[category_names[index]])
+        print(class_report)
 
 
 def save_model(model, model_filepath):
-    pass
+    joblib.dump(model, model_filepath)
 
 
 def main():
