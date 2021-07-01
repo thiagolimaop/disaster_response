@@ -18,6 +18,14 @@ from sklearn.metrics import classification_report
 from sklearn.externals import joblib
 
 def load_data(database_filepath):
+    """
+    INPUT
+        database_filepath - the file path to database
+    OUTPUT
+        X - a panda series with the messages in english
+        y - a numpy array with all 36 binary categories
+        labels - a list of strings with the categories name 
+    """
     engine = create_engine('sqlite:///{}'.format(database_filepath))
     df = pd.read_sql('SELECT * FROM DisasterMessages', con = engine)
     
@@ -28,6 +36,12 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    INPUT
+        text - a string with an english message
+    OUTPUT
+        return - a list with the clean tokens based on the english message
+    """
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     
     detected_urls = re.findall(url_regex, text)
@@ -46,6 +60,10 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    OUTPUT
+        return - a GridSearchCV instance with the model pipeline
+    """
     pipeline = Pipeline([
            ('vect', CountVectorizer(tokenizer=tokenize)),
            ('tfidf', TfidfTransformer()),
@@ -65,6 +83,13 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    INPUT
+        model - a trained model
+        X_test - the portion data to evaluate the model
+        Y_test - the categories represented to the X_test
+        category_names - a list of strings with the category names
+    """
     y_pred = model.predict(X_test)
     print('Best params')
     print(model.best_params_)
@@ -75,6 +100,11 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """
+    INPUT
+        model - a trained model
+        model_filepath - a file path to store the trained model
+    """
     joblib.dump(model, model_filepath)
 
 

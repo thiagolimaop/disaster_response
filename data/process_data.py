@@ -4,11 +4,27 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """
+    INPUT
+        messages_filepath - file path to messages dataset
+        categories_filepath - file path to categories dataset
+    OUTPUT
+        return - a dataframe containing the two datasets merged
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     return messages.merge(categories, on=('id'))
 
 def clean_data(df):
+    """
+    INPUT
+        df - the merged dataframe returned by the load_data function
+    OUTPUT
+        return - a dataframe with 36 columns representing each one, a different category,
+                besides the 4 columns with original message, the message in english, the 
+                id and genre column.
+    """
+    
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';', expand=True)
 
@@ -35,6 +51,11 @@ def clean_data(df):
     
     
 def save_data(df, database_filename):
+    """
+    INPUT
+        df - a dataframe returned by the clean_data function
+        database_filename - file path to whole database
+    """
     engine = create_engine('sqlite:///{}'.format(database_filename))
     df.to_sql('DisasterMessages', engine, index=False)
 
