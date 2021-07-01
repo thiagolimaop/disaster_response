@@ -33,13 +33,11 @@ During a disaster event millions of communications are exchanged. People need wa
     |- classifier.pkl # saved model
     - README.md
 
+The app folder contains the run.py file responsible to run the application, besides the templates in HTML.
 
+The data folder has two datasets. The first dataset has the original message, the message in english and the id, besides the genre that is equal to all messages. The second one has the categories that a certain message belongs to and the id message. The cleaning data process is made by process_data.py, and is better explained below. 
 
-### Data structure
- 
-The dataset provided is divided in two parts:
-- First part the data has the original message, the message in english and the id, besides the genre that is equal to all messages.
-- The second has the categories that a certain message belongs to and the id message.
+The models folder contains two files: train_classifier.py is responsible to read the data from a database and train the classifier (the modeling process is better explained below), and the saved model produced is in the classifier.pkl.
 
 ### Cleaning data
 
