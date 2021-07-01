@@ -16,6 +16,24 @@ During a disaster event millions of communications are exchanged. People need wa
 
 3. Go to http://0.0.0.0:3001/
 
+### Repository
+
+    - app
+    | - template
+    | |- master.html # main page of web app
+    | |- go.html # classification result page of web app
+    |- run.py # Flask file that runs app
+    - data
+    |- disaster_categories.csv # data to process
+    |- disaster_messages.csv # data to process
+    |- process_data.py # cleaning data and structure it to save in database
+    |- InsertDatabaseName.db # database to save clean data
+    - models
+    |- train_classifier.py # read the data from a database and train the classifier
+    |- classifier.pkl # saved model
+    - README.md
+
+
 ### Data structure
  
 The dataset provided is divided in two parts:
