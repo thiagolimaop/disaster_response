@@ -2,7 +2,7 @@
 
 During a disaster event millions of communications are exchanged. People need water, medical supplies, food and other basic needs. This application is responsible for helping organizations to prioritise the important messages, taking the disaster messages in english and then classifying these messages according to 36 classes indicating what is relevant to help people.
 
-### Instructions:
+## Instructions:
 
 1. Run the following commands in the project's root directory to set up your database and model.
 
@@ -16,7 +16,7 @@ During a disaster event millions of communications are exchanged. People need wa
 
 3. Go to http://0.0.0.0:3001/
 
-### Repository
+## Repository
 
     - app
     | - template
@@ -27,11 +27,12 @@ During a disaster event millions of communications are exchanged. People need wa
     |- disaster_categories.csv # data to process
     |- disaster_messages.csv # data to process
     |- process_data.py # cleaning data and structure it to save in database
-    |- InsertDatabaseName.db # database to save clean data
+    |- DisasterResponse.db # database to save clean data
     - models
     |- train_classifier.py # read the data from a database and train the classifier
     |- classifier.pkl # saved model
     - README.md
+
 
 
 ### Data structure
@@ -42,7 +43,7 @@ The dataset provided is divided in two parts:
 
 ### Cleaning data
 
-The process consists of separating the categories in 36 different columns, indicating if some message belongs to a class or not, then the duplicated rows are dropped according to the “original” column, containing the original messages.
+The process consists of separating the categories in 36 different columns, indicating if some message belongs to a class or not, then the duplicated rows are dropped according to the “original” column, containing the original messages. Finally the data is saved in a database called DisasterResponse.db.
 
 ### Modeling process
 
