@@ -1,6 +1,6 @@
 # Disaster Response Pipeline Project
 
-This application takes disaster messages in english and then classifies these messages according to 36 classes indicating what is relevant to help people with a real disaster.
+During a disaster event millions of communications are exchanged. People need water, medical supplies, food and other basic needs. This application is responsible for helping organizations to prioritise the important messages, taking the disaster messages in english and then classifying these messages according to 36 classes indicating what is relevant to help people.
 
 ### Instructions:
 
