@@ -37,7 +37,7 @@ def clean_data(df):
 
     # convert category values to just numbers 0 or 1.
     for column in categories:
-        categories[column] = categories[column].apply(lambda x: int(x[-1]))
+        categories[column] = categories[column].apply(lambda x: 0 if int(x[-1]) == 0 else 1)
         
     df.drop(['categories'], axis=1, inplace=True)
     
